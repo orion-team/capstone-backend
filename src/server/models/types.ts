@@ -20,8 +20,9 @@ export interface Recipe {
   source: string;
   // Original recipe URL
   url: string;
-  images: Record<ImageKey, Image>;
-  ingredientLines: string[];
+  images?: Record<ImageKey, Image>;
+  ingredientLines?: string[];
+  ingredients?: Ingedient[];
 }
 
 export interface Ingedient {

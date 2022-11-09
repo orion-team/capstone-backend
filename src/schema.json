@@ -42,7 +42,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/FavoritedItem"
+                  "$ref": "#/components/schemas/Recipe"
                 }
               }
             }
@@ -70,31 +70,92 @@
           }
         }
       }
+    },
+    "/search": {
+      "get": {
+        "summary": "Returns a list of recipes maatching the provided criteria",
+        "operationId": "search",
+        "parameters": [
+          {
+            "name": "q",
+            "required":true,
+            "in": "query",
+            "description": "Query text, for example \"chicken\"",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "tags": ["search"],
+        "responses": {
+          "200": {
+            "description": "A paginated response of recipes",
+            "content": {
+              "application/json": {
+                "schema": {
+                   "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/Recipe"
+                  }
+                }
+              }
+            }
+          },
+          "default": {
+            "description": "unexpected error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        }
+      }
     }
   },
   "components": {
     "schemas": {
-      "FavoritedItem": {
+      "Recipe": {
         "type": "object",
-        "required": ["id", "url", "title", "imageURL"],
+        "required": ["uri", "label", "source", "url", "image"],
         "properties": {
-          "id": {
-            "type": "string"
+          "uri": { "type": "string" },
+          "label": { "type": "string" },
+          "image": { "type": "string" },
+          "source": { "type": "string" },
+          "url": { "type": "string" },
+          "images": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Image"
+            }
           },
-          "url": {
-            "type": "string"
-          },
-          "title": {
-            "type": "string"
-          },
-          "imageURL": {
-            "type": "string"
-          },
-          "ingredients": {
+          "ingredientsLines": {
             "type": "array",
             "items": {
               "type": "string"
             }
+          },
+          "ingredients": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Ingredient"
+            }
+          }
+        }
+      },
+      "FavoritedItem": {
+        "type": "object",
+        "required": ["recipe", "favoritedAt"],
+        "properties": {
+          "recipe": {
+            "$ref": "#/components/schemas/Recipe"
+          },
+          "favoritedAt": {
+            "type": "string",
+            "format": "date-time"
           }
         }
       },
@@ -102,6 +163,51 @@
         "type": "array",
         "items": {
           "$ref": "#/components/schemas/FavoritedItem"
+        }
+      },
+      "Image": {
+        "type": "object",
+        "required": [
+          "THUMBNAIL", 
+          "SMALL",
+          "REGULAR",
+          "LARGE"
+        ],
+        "properties": {
+          "THUMBNAIL": {
+            "$ref": "#/components/schemas/ImageMeta"
+          },
+          "SMALL": {
+            "$ref": "#/components/schemas/ImageMeta"
+          },
+          "REGULAR": {
+            "$ref": "#/components/schemas/ImageMeta"
+          },
+          "LARGE": {
+            "$ref": "#/components/schemas/ImageMeta"
+          }
+        }
+      },
+      "ImageMeta": {
+        "type": "object",
+        "required": ["url", "width", "height"],
+        "properties": {
+          "url'": { "type": "string" },
+          "width": { "type": "number", "format": "float" },
+          "height": { "type": "number", "format": "float" }
+        }
+      },
+      "Ingredient": {
+        "type": "object",
+        "properties": {
+          "text": { "type": "string" },
+          "quantity": { "type": "number", "format": "float" },
+          "measure": { "type": "string" },
+          "food": { "type": "string" },
+          "foodId": { "type": "string" },
+          "weight": { "type": "number", "format": "float" },
+          "foodCategory": { "type": "string" },
+          "image": { "type": "string" }
         }
       },
       "Error": {
@@ -120,3 +226,4 @@
     }
   }
 }
+
