@@ -19,7 +19,7 @@ export const search = async (req: Request, res: Response) => {
     }
 
     const data: EdamamResponse = await result.json();
-    const recipes = data.hits;
+    const recipes = data.hits.map((hit) => hit.recipe);
     res.status(200).json(recipes);
   } catch (error) {
     // TODO fix
