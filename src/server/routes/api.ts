@@ -3,6 +3,7 @@ import { serve, setup } from "swagger-ui-express";
 import * as schema from "../../schema.json";
 
 import { favorite } from "./favorite";
+import { search } from "./search";
 
 const router = express.Router();
 
@@ -14,4 +15,5 @@ router.use("/api-docs", serve);
 router.get("/api-docs", setup(schema, { explorer: true }));
 
 router.use("/favorite", favorite);
+router.use("/search", search);
 export default router;
