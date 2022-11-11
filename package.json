@@ -1,7 +1,7 @@
 {
   "name": "ultimate_recipe_backend",
   "version": "1.0.0",
-  "main": "index.js",
+  "main": "build/app.js",
   "scripts": {
     "build": "tsc",
     "serve:dev": "nodemon --files src/app.ts",
