@@ -6,7 +6,9 @@
     "build": "tsc",
     "serve:dev": "nodemon --files src/app.ts",
     "serve:prod": "node build/app.js",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "format:fix": "eslint --fix",
+    "format:prettier": "prettier -w ./"
   },
   "license": "ISC",
   "devDependencies": {
