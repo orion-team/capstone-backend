@@ -3,11 +3,7 @@
     "class-name": true,
     "curly": true,
     "eofline": true,
-    "indent": [
-      true,
-      "spaces",
-      2
-    ],
+    "indent": [true, "spaces", 2],
     "no-angle-bracket-type-assertion": true,
     "no-consecutive-blank-lines": true,
     "no-default-export": true,
@@ -21,23 +17,10 @@
       "check-else",
       "check-whitespace"
     ],
-    "ordered-imports": [
-      true
-    ],
-    "quotemark": [
-      true,
-      "avoid-escape",
-      "avoid-template",
-      "jsx-double"
-    ],
-    "semicolon": [
-      true,
-      "always"
-    ],
-    "triple-equals": [
-      true,
-      "allow-null-check"
-    ],
+    "ordered-imports": [true],
+    "quotemark": [true, "avoid-escape", "avoid-template", "jsx-double"],
+    "semicolon": [true, "always"],
+    "triple-equals": [true, "allow-null-check"],
     "typedef-whitespace": [
       true,
       {
@@ -63,3 +46,4 @@
       "check-type"
     ]
   }
+}

@@ -38,14 +38,14 @@
         "operationId": "createFavorites",
         "tags": ["favorites"],
         "requestBody": {
-            "description": "Add recipe to favorites",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/Recipe"
-                }
+          "description": "Add recipe to favorites",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Recipe"
               }
             }
+          }
         },
         "responses": {
           "200": {
@@ -78,7 +78,7 @@
         "parameters": [
           {
             "name": "q",
-            "required":true,
+            "required": true,
             "in": "query",
             "description": "Query text, for example \"chicken\"",
             "schema": {
@@ -93,7 +93,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                   "type": "array",
+                  "type": "array",
                   "items": {
                     "$ref": "#/components/schemas/Recipe"
                   }
@@ -167,12 +167,7 @@
       },
       "Image": {
         "type": "object",
-        "required": [
-          "THUMBNAIL", 
-          "SMALL",
-          "REGULAR",
-          "LARGE"
-        ],
+        "required": ["THUMBNAIL", "SMALL", "REGULAR", "LARGE"],
         "properties": {
           "THUMBNAIL": {
             "$ref": "#/components/schemas/ImageMeta"
@@ -226,4 +221,3 @@
     }
   }
 }
-
