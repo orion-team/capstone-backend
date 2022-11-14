@@ -1,4 +1,5 @@
 import { Request, Response } from "express";
+import db from "../../../DBConnection";
 import { FavoritedItem } from "../models";
 
 // TODO - implement
@@ -19,6 +20,19 @@ const favorites: FavoritedItem[] = [
   },
 ];
 
+const query = `
+  SELECT * FROM recipe;
+`;
+
 export const getAll = async (req: Request, res: Response) => {
+  db.connect();
+  db.getConnection().query(query, (err, results) => {
+    if (err) {
+      res.status(500).send("Server Error");
+    }
+
+    console.log("RESULTS", results);
+  });
+  db.end();
   res.send(favorites);
 };
