@@ -1,6 +1,6 @@
 import mysql from "mysql";
-// import fs from "fs";
-// import path from "path";
+import fs from "fs";
+import path from "path";
 
 export class DBConnection {
   private connection: mysql.Connection;
@@ -13,24 +13,38 @@ export class DBConnection {
       database: process.env.DB_NAME,
     });
 
-    this.connection.connect((err) => {
-      console.error(err);
-    });
-
     // create tables if not exist
 
     // TODO uncomment when ready
     /* 
+
+    this.connect();
     const createSQLQueries = fs
       .readFileSync(path.join(__dirname, "/init.sql"))
       .toString();
-    const queriesArr = createSQLQueries
-      .split(");")
-      .filter((str) => /\s/.test(str));
 
-      */
+     this.connection.query(createSQLQueries, (err) => {
+      if (err) {
+        console.error(err);
+      }
+    });
 
+
+    // TODO - check if needs to end
     this.end();
+      */
+  }
+
+  public connect() {
+    this.connection.connect((err) => {
+      if (err) {
+        console.error(err);
+      }
+    });
+  }
+
+  public getConnection() {
+    return this.connection;
   }
 
   public end() {
