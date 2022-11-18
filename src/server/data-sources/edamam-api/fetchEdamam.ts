@@ -1,6 +1,6 @@
 import fetch, { RequestInit } from "node-fetch";
 
-const { APP_ID: app_id, APP_KEY: app_key } = process.env;
+const { EDAMAM_APP_ID: app_id, EDAMAM_APP_KEY: app_key } = process.env;
 
 export const fetchEdamam = (
   urlNoQueryParams: string,
