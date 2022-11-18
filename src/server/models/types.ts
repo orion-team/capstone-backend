@@ -39,8 +39,8 @@ export interface Ingedient {
 
 export interface User {
   email: string;
-  firstName: string;
-  lastName: string;
+  name: string;
+  picture: string;
 }
 
 export interface FavoritedItem {
