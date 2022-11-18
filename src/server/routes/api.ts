@@ -4,6 +4,7 @@ import * as schema from "../../schema.json";
 
 import { favorite } from "./favorite";
 import { search } from "./search";
+import { auth } from "./auth";
 
 const router = express.Router();
 
@@ -14,6 +15,9 @@ router.get("/", (_req, res) => {
 router.use("/api-docs", serve);
 router.get("/api-docs", setup(schema, { explorer: true }));
 
+router.use("/auth", auth);
+
 router.use("/favorite", favorite);
 router.use("/search", search);
+
 export default router;
