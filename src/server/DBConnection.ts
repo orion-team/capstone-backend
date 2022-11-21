@@ -6,33 +6,36 @@ export class DBConnection {
   private connection: mysql.Connection;
 
   constructor() {
-    this.connection = mysql.createConnection({
+    const connectionOptions = {
       host: process.env.DB_HOST,
       user: process.env.DB_USER,
       password: process.env.DB_PASSWORD,
       database: process.env.DB_NAME,
-    });
-
-    // create tables if not exist
-
-    // TODO uncomment when ready
-    /* 
-
+    };
+    if (process.env.DB_PORT) {
+      connectionOptions["port"] = process.env.DB_PORT;
+    }
+    this.connection = mysql.createConnection(connectionOptions);
     this.connect();
+
     const createSQLQueries = fs
       .readFileSync(path.join(__dirname, "/init.sql"))
       .toString();
 
-     this.connection.query(createSQLQueries, (err) => {
-      if (err) {
-        console.error(err);
-      }
-    });
+    const queriesArr = createSQLQueries
+      .split(");")
+      .filter((str) => /\s/.test(str))
+      .map((str) => `${str});`);
 
+    for (const query of queriesArr) {
+      this.connection.query(query, (err) => {
+        if (err) {
+          console.error(err);
+        }
+      });
+    }
 
-    // TODO - check if needs to end
     this.end();
-      */
   }
 
   public connect() {
