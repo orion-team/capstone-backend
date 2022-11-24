@@ -22,7 +22,11 @@ export class Server {
     this.app.use(async (req, res, next) => {
       const { path, session } = req;
       // TODO extract constant
-      if (path === "/api/auth/login" || path === "/api/search") {
+      if (
+        path === "/api/auth/login" ||
+        path === "/api/search" ||
+        path === "/api/favorite"
+      ) {
         next();
       } else {
         if (session?.email) {
