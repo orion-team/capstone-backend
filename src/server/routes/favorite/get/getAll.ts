@@ -25,14 +25,13 @@ const query = `
 `;
 
 export const getAll = async (req: Request, res: Response) => {
-  db.connect();
-  db.getConnection().query(query, (err, results) => {
+  db.connect().query(query, (err, results) => {
     if (err) {
+      console.error(err);
       res.status(500).send("Server Error");
     }
 
-    console.log("RESULTS", results);
+    db.end();
+    res.status(200).json(results);
   });
-  db.end();
-  res.send(favorites);
 };

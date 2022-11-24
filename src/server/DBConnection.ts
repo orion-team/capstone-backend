@@ -1,21 +1,20 @@
 import mysql from "mysql";
 import fs from "fs";
 import path from "path";
-
+const connectionOptions = {
+  host: process.env.DB_HOST,
+  user: process.env.DB_USER,
+  password: process.env.DB_PASSWORD,
+  database: process.env.DB_NAME,
+};
 export class DBConnection {
   private connection: mysql.Connection;
 
   constructor() {
-    const connectionOptions = {
-      host: process.env.DB_HOST,
-      user: process.env.DB_USER,
-      password: process.env.DB_PASSWORD,
-      database: process.env.DB_NAME,
-    };
     if (process.env.DB_PORT) {
       connectionOptions["port"] = process.env.DB_PORT;
     }
-    this.connection = mysql.createConnection(connectionOptions);
+
     this.connect();
 
     const createSQLQueries = fs
@@ -39,23 +38,29 @@ export class DBConnection {
   }
 
   public connect() {
+    if (!this.connection) {
+      this.connection = mysql.createConnection(connectionOptions);
+    }
+
     this.connection.connect((err) => {
       if (err) {
         console.error(err);
       }
     });
-  }
 
-  public getConnection() {
     return this.connection;
   }
 
   public end() {
-    this.connection.end((err) => {
-      if (err) {
-        console.log(err.message);
-      }
-    });
+    if (this.connection) {
+      this.connection.end((err) => {
+        if (err) {
+          console.log(err.message);
+        }
+      });
+
+      this.connection = null;
+    }
   }
 }
 
