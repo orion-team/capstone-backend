@@ -1,4 +1,3 @@
-import { randomUUID } from "crypto";
 import mysql from "mysql";
 import { Request, Response } from "express";
 import { validationResult } from "express-validator";
