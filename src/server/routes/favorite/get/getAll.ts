@@ -25,13 +25,11 @@ const query = `
 `;
 
 export const getAll = async (req: Request, res: Response) => {
-  db.connect().query(query, (err, results) => {
-    if (err) {
-      console.error(err);
-      res.status(500).send("Server Error");
-    }
-
-    db.end();
+  try {
+    const results = await db.query(query);
     res.status(200).json(results);
-  });
+  } catch (error) {
+    console.error(error);
+    res.status(500).send("Server Error");
+  }
 };
