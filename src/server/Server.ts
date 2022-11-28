@@ -1,6 +1,7 @@
 import express from "express";
 import { Express } from "express";
 import session from "express-session";
+import db from "./DBConnection";
 import { authNMiddleware } from "./middleware";
 import { api } from "./routes";
 
@@ -20,11 +21,11 @@ export class Server {
     );
 
     this.app.use(authNMiddleware);
-
     this.app.use("/api", api);
   }
 
-  public start(port: number): void {
+  public async start(port: number): Promise<void> {
+    await db.initialize();
     this.app.listen(port, () =>
       console.log(`Server listening on port ${port}! 🚀🚀🚀`)
     );

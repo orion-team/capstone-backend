@@ -1,22 +1,12 @@
-import mysql from "mysql";
 import { Request, Response } from "express";
 import { validationResult } from "express-validator";
 import { OAuth2Client, TokenPayload } from "google-auth-library";
+import { queryUserGetByEmail, queryUserInsert } from "../../queries";
 import db from "../../DBConnection";
 
+import { errors as errorMessages } from "../../models";
+
 const client = new OAuth2Client(process.env.CLIENT_ID);
-
-const queryUserInsert = (email: string, name: string, picture: string) => `
-INSERT INTO user (id, email, name, picture) VALUES (UUID_TO_BIN(UUID()), ${mysql.escape(
-  email
-)}, ${mysql.escape(name)}, ${mysql.escape(picture)}); 
-`;
-
-const queryUserGet = (email: string) => `
-SELECT BIN_TO_UUID(id) as uuid, email, name, picture FROM user WHERE email=${mysql.escape(
-  email
-)}
-`;
 
 export const postLogin = async (req: Request, res: Response) => {
   const errors = validationResult(req);
@@ -38,17 +28,17 @@ export const postLogin = async (req: Request, res: Response) => {
     }: TokenPayload = ticket.getPayload();
 
     if (!email) {
-      res.status(404).send("Can not find user email");
+      res.status(404).json({ error: errorMessages[404].user });
     }
 
-    let resultsExistingUser = await db.query(queryUserGet(email));
+    let resultsExistingUser = await db.query(queryUserGetByEmail(email));
 
     if (
       !Array.isArray(resultsExistingUser) ||
       resultsExistingUser.length === 0
     ) {
       await db.query(queryUserInsert(email, name, picture));
-      resultsExistingUser = await db.query(queryUserGet(email));
+      resultsExistingUser = await db.query(queryUserGetByEmail(email));
     }
 
     req.session.userId = resultsExistingUser[0].uuid;
@@ -58,7 +48,7 @@ export const postLogin = async (req: Request, res: Response) => {
       picture,
     });
   } catch (error) {
-    console.log(error);
-    res.status(500).send("Server Error");
+    console.error(error);
+    res.status(500).json({ error: errorMessages[500].default });
   }
 };

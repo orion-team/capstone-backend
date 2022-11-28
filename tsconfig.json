@@ -6,7 +6,7 @@
     "target": "es6",
     "moduleResolution": "node",
     "esModuleInterop": true,
-    "lib": ["es6"],
+    "lib": ["es2020", "es2019"],
     "allowJs": true,
     "forceConsistentCasingInFileNames": true,
     "resolveJsonModule": true

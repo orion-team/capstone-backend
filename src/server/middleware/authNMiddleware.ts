@@ -1,13 +1,7 @@
-import mysql from "mysql";
 import { NextFunction, Request, Response } from "express";
 import { routes } from "../models";
 import db from "../DBConnection";
-
-const queryUserGet = (uuid: string) => `
-SELECT BIN_TO_UUID(id) as uuid, email, name, picture FROM user WHERE id=UUID_TO_BIN(${mysql.escape(
-  uuid
-)})
-`;
+import { queryUserGetByUUID } from "../queries";
 
 export const authNMiddleware = async (
   req: Request,
@@ -18,7 +12,7 @@ export const authNMiddleware = async (
 
   if (routes.protected.has(path)) {
     if (session?.userId) {
-      const userResults = await db.query(queryUserGet(session.userId));
+      const userResults = await db.query(queryUserGetByUUID(session.userId));
 
       if (userResults.length === 0) {
         res.status(401).end();

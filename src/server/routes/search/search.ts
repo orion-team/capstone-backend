@@ -1,9 +1,17 @@
 import express from "express";
-import { query } from "express-validator";
-import { search } from "./get";
+import { param } from "express-validator";
+import { searchById } from "./get";
+import { searchAll } from "./get/searchAll";
 
 const router = express.Router();
 
-router.get("/", query("q").notEmpty().isString().trim().escape(), search);
+// TODO add custom validator
+router.get("/", searchAll);
+
+router.get(
+  "/:recipeId",
+  param("recipeId").notEmpty().trim().escape(),
+  searchById
+);
 
 export default router;

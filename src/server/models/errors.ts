@@ -10,5 +10,6 @@ export const errors = {
   },
   404: {
     default: "Object not found",
+    user: "No user fond with provided credentials",
   },
 };
