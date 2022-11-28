@@ -12,6 +12,6 @@ export const fetchEdamam = (
   query.set("app_id", app_id);
   query.set("app_key", app_key);
 
-  const url = `${urlNoQueryParams}?${queryParams.toString()}`;
+  const url = `${urlNoQueryParams}?${query.toString()}`;
   return fetch(url, options);
 };
