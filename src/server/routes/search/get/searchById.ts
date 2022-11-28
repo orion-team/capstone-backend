@@ -14,6 +14,11 @@ export const searchById = async (req: Request, res: Response) => {
   try {
     const result = await searchRecipeById(recipeId);
 
+    if (result.status === 429) {
+      res.status(429).end();
+      return;
+    }
+
     if (result.status !== 200) {
       throw new Error("Non success status");
     }

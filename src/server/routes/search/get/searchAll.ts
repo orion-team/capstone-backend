@@ -14,6 +14,11 @@ export const searchAll = async (req: Request, res: Response) => {
       new URLSearchParams(req.query as Record<string, string>)
     );
 
+    if (result.status === 429) {
+      res.status(429).end();
+      return;
+    }
+
     if (result.status !== 200) {
       throw new Error("Non success status");
     }
@@ -21,8 +26,7 @@ export const searchAll = async (req: Request, res: Response) => {
     const data: EdamamResponseRecipes = await result.json();
     res.status(200).json(data);
   } catch (error) {
-    // TODO fix
-    res.status(500);
-    res.render("error", { error: errorMessages[500].default });
+    console.error(error);
+    res.status(500).json({ error: errorMessages[500].default });
   }
 };
