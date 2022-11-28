@@ -20,6 +20,8 @@ export interface Recipe {
   source: string;
   // Original recipe URL
   url: string;
+  calories: number;
+  cuisineType: string;
   images?: Record<ImageKey, Image>;
   ingredientLines?: string[];
   ingredients?: Ingedient[];
