@@ -1,9 +1,10 @@
-import mysql from "mysql";
+import mysql from "promise-mysql";
 import fs from "fs";
 import path from "path";
 
+const env = process.env.ENV;
+
 const connectionOptions = {
-  host: process.env.DB_HOST,
   user: process.env.DB_USER,
   password: process.env.DB_PASSWORD,
   database: process.env.DB_NAME,
@@ -19,7 +20,7 @@ const initSQLQueriesArr = initSQLQueries
   .map((str) => `${str});`);
 
 export class DBConnection {
-  private connection: mysql.Connection | null;
+  private connection: mysql.Pool | null;
   private static initialized = false;
 
   constructor() {}
@@ -33,82 +34,33 @@ export class DBConnection {
       connectionOptions["port"] = process.env.DB_PORT;
     }
 
-    await this.connect();
-    const queryPromises = initSQLQueriesArr.map(
-      (query) =>
-        new Promise((resolve, reject) => {
-          this.connection.query(query, (err, results) => {
-            if (err) {
-              console.error(err);
-              reject(err);
-            } else {
-              resolve(results);
-            }
-          });
-        })
+    if (env === "PROD") {
+      connectionOptions[
+        "socketPath"
+      ] = `/cloudsql/${process.env.DB_INSTANCE_CONNECTION_NAME}`;
+    } else {
+      connectionOptions["host"] = process.env.DB_HOST;
+    }
+
+    this.connection = await mysql.createPool(connectionOptions);
+
+    const queryPromises = initSQLQueriesArr.map((query) =>
+      this.connection.query(query)
     );
 
     for await (const query of queryPromises) {
       try {
         await query;
       } catch (error) {
-        console.log(error);
+        console.log("Query error: ", error);
         break;
       }
     }
-    await this.end();
-
     DBConnection.initialized = true;
   }
 
-  public async connect(): Promise<mysql.Connection> {
-    if (!this.connection) {
-      this.connection = mysql.createConnection(connectionOptions);
-    }
-
-    return await new Promise((resolve, reject) => {
-      this.connection.connect((err) => {
-        if (err) {
-          console.error(err);
-          reject(err);
-        } else {
-          resolve(this.connection);
-        }
-      });
-    });
-  }
-
-  public async end(): Promise<null> {
-    if (this.connection) {
-      return new Promise((resolve, reject) => {
-        this.connection.end((err) => {
-          if (err) {
-            console.error(err.message);
-            reject(err);
-          } else {
-            this.connection = null;
-            resolve(this.connection);
-          }
-        });
-      });
-    }
-  }
-
-  public async query(queryStr: string): Promise<mysql> {
-    await this.connect();
-    const results = await new Promise((resolve, reject) => {
-      this.connection.query(queryStr, (error, results) => {
-        if (error) {
-          console.error(error);
-          reject(error);
-        } else {
-          resolve(results);
-        }
-      });
-    });
-
-    await this.end();
-
+  public async query<T>(queryStr: string): Promise<T[]> {
+    const results = await this.connection.query(queryStr);
     return results;
   }
 }
