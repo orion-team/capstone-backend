@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "main": "build/app.js",
   "scripts": {
-    "build": "tsc && cp ./src/server/init.sql ./build/server/init.sql && cp -r ./src/public ./build/public",
+    "build": "tsc && cp ./src/server/init.sql ./build/server/init.sql && cp -r ./src/public ./build",
     "serve:dev": "nodemon --files src/app.ts",
     "serve:prod": "node build/app.js",
     "start": "npm run serve:prod",
