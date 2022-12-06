@@ -1,7 +1,12 @@
 /node_modules
 /build
+src/public
 
 # env 
 .env
 .env.local
 .env.*
+
+# app engine 
+app.yaml
+yarn-error.log
