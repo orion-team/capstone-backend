@@ -28,7 +28,7 @@ export class Server {
     const staticOptions = {
       maxAge: "30 days",
       setHeaders: (res, path) => {
-        if (express.static.mime.getType(path) === "text/html") {
+        if (path.includes(".html")) {
           // Skip cache on html to load new builds.
           res.setHeader("Cache-Control", "public, max-age=0");
         }
@@ -37,7 +37,6 @@ export class Server {
 
     this.app.use(
       "/",
-      () => {},
       express.static(path.join(__dirname, "..", "public"), staticOptions)
     );
 
