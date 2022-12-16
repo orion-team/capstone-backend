@@ -1,5 +1,5 @@
 import { NextFunction, Request, Response } from "express";
-import { routes } from "../models";
+import { routes, User } from "../models";
 import db from "../DBConnection";
 import { queryUserGetByUUID } from "../queries";
 
@@ -12,12 +12,15 @@ export const authNMiddleware = async (
 
   if (routes.protected.has(path)) {
     if (session?.userId) {
-      const userResults = await db.query(queryUserGetByUUID(session.userId));
+      const userResults = await db.query<User>(
+        queryUserGetByUUID(session.userId)
+      );
 
       if (userResults.length === 0) {
         res.status(401).end();
       } else {
         const [user] = userResults;
+
         req["user"] = user;
       }
 

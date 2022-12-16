@@ -4,7 +4,7 @@ import { OAuth2Client, TokenPayload } from "google-auth-library";
 import { queryUserGetByEmail, queryUserInsert } from "../../queries";
 import db from "../../DBConnection";
 
-import { errors as errorMessages } from "../../models";
+import { errors as errorMessages, User } from "../../models";
 
 const client = new OAuth2Client(process.env.CLIENT_ID);
 
@@ -31,7 +31,9 @@ export const postLogin = async (req: Request, res: Response) => {
       res.status(404).json({ error: errorMessages[404].user });
     }
 
-    let resultsExistingUser = await db.query(queryUserGetByEmail(email));
+    let resultsExistingUser = await db.query<User & { uuid: string }>(
+      queryUserGetByEmail(email)
+    );
 
     if (
       !Array.isArray(resultsExistingUser) ||

@@ -1,6 +1,7 @@
 import express from "express";
 import { Express } from "express";
 import session from "express-session";
+import path from "path";
 import db from "./DBConnection";
 import { authNMiddleware } from "./middleware";
 import { api } from "./routes";
@@ -21,13 +22,38 @@ export class Server {
     );
 
     this.app.use(authNMiddleware);
+
     this.app.use("/api", api);
+
+    const staticOptions = {
+      maxAge: "30 days",
+      setHeaders: (res, path) => {
+        if (path.includes(".html")) {
+          // Skip cache on html to load new builds.
+          res.setHeader("Cache-Control", "public, max-age=0");
+        }
+      },
+    };
+
+    this.app.use(
+      "/",
+      express.static(path.join(__dirname, "..", "public"), staticOptions)
+    );
+
+    this.app.use(
+      "/*",
+      express.static(path.join(__dirname, "..", "public"), staticOptions)
+    );
   }
 
   public async start(port: number): Promise<void> {
-    await db.initialize();
-    this.app.listen(port, () =>
-      console.log(`Server listening on port ${port}! 🚀🚀🚀`)
-    );
+    try {
+      await db.initialize();
+      this.app.listen(port, () =>
+        console.log(`Server listening on port ${port}! 🚀🚀🚀`)
+      );
+    } catch (error) {
+      console.error(error);
+    }
   }
 }

@@ -1,0 +1,19 @@
+runtime: nodejs16
+
+handlers:
+  - url: /api/.*
+    script: auto
+    secure: always
+
+env_variables:
+  ENV: PROD
+  SESSION_SECRET: "<secret>"
+  DB_HOST: "<dbhost>"
+  DB_USER: "<dbuser>"
+  DB_PASSWORD: "<dbpassword>"
+  DB_NAME: "ultimate_recipe"
+  DB_PORT: 3306
+  EDAMAM_APP_ID: "<app_id>"
+  EDAMAM_APP_KEY: "<app_key>"
+  GOOGLE_CLIENT_ID: "<client_id>"
+  REACT_APP_GOOGLE_CLIENT_ID: "<client_id>"

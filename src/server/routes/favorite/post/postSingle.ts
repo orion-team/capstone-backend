@@ -7,6 +7,7 @@ import {
   FavoritedItem,
   errors as errorMessages,
   parseRecipeIdFromUri,
+  Recipe,
 } from "../../../models";
 
 import {
@@ -35,7 +36,7 @@ export const postSingle = async (req: Request, res: Response) => {
     const { recipe }: EdamamResponseRecipe = await result.json();
     const edamamId = parseRecipeIdFromUri(recipe.uri);
 
-    let resultsExistingRecipe = await db.query(
+    let resultsExistingRecipe = await db.query<Recipe & { uuid: string }>(
       queryRecipeGetByEdamamId(edamamId)
     );
 
